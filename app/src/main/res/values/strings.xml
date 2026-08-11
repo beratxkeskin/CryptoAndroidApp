@@ -1,0 +1,175 @@
+<resources>
+    <string name="app_name">CryptoAndroidApp</string>
+    
+    <!-- Authentication - Login -->
+    <string name="login_title">Login</string>
+    <string name="login_subtitle">Sign in to your account to continue.</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="btn_login">Login</string>
+    <string name="or_text">or</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_apple">Continue with Apple</string>
+    <string name="dont_have_account">Don\'t have an account? </string>
+    <string name="btn_register">Sign Up</string>
+    
+    <!-- Authentication - SignUp -->
+    <string name="register_title">Sign Up</string>
+    <string name="register_subtitle">Create a new account to get started.</string>
+    <string name="name_placeholder">Full Name</string>
+    <string name="already_have_account">Already have an account? </string>
+    
+    <!-- Validation Errors & Messages -->
+    <string name="err_email_empty">Email cannot be empty.</string>
+    <string name="err_email_invalid">Invalid email.</string>
+    <string name="err_password_empty">Password cannot be empty.</string>
+    <string name="err_password_short">Password must be at least 6 characters.</string>
+    <string name="err_name_empty">Full name cannot be empty.</string>
+    <string name="success_login">Login Successful!</string>
+    <string name="success_register">Registration Successful!</string>
+    
+    <!-- Home Navigation & UI -->
+    <string name="nav_home">Home</string>
+    <string name="nav_markets">Markets</string>
+    <string name="nav_portfolio">Portfolio</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_profile">Profile</string>
+    
+    <string name="greeting_welcome">Welcome,</string>
+    <string name="greeting_evening">Good Evening,</string>
+    <string name="header_subtitle">Track markets in real time.</string>
+    <string name="portfolio_title">Total Portfolio Value</string>
+    <string name="portfolio_all_assets">All Assets</string>
+    
+    <!-- Time Frames -->
+    <string name="time_1d">1D</string>
+    <string name="time_1w">1W</string>
+    <string name="time_1m">1M</string>
+    <string name="time_3m">3M</string>
+    <string name="time_1y">1Y</string>
+    <string name="time_all">All</string>
+    
+    <!-- Watchlist -->
+    <string name="watchlist_title">Watchlist</string>
+    <string name="view_all">View All  →</string>
+    
+    <!-- Markets -->
+    <string name="markets_title">Crypto Markets</string>
+    <string name="markets_subtitle">Explore markets, track trends.</string>
+    <string name="search_placeholder">Search crypto...</string>
+    <string name="search_clear">Clear search</string>
+    <string name="search_no_results">No results found for \"%1$s\".</string>
+    <string name="market_cap_stat">Total Market Cap</string>
+    <string name="volume_24h_stat">24h Trading Volume</string>
+    <string name="btc_dominance_stat">Bitcoin Dominance</string>
+    <string name="market_share">Market Share</string>
+    <string name="filter_all">All</string>
+    <string name="filter_favorites">Watchlist</string>
+    <string name="filter_trending">Trending</string>
+    <string name="filter_gainers">Gainers</string>
+    <string name="filter_losers">Losers</string>
+    <string name="sort_market_cap">Sort: Market Cap ⌄</string>
+    <string name="column_name">Asset</string>
+    <string name="column_chart">Chart</string>
+    <string name="column_price">Price</string>
+    <string name="column_change">24h Change</string>
+    
+    <!-- Detail -->
+    <string name="detail_loading">Loading chart data...</string>
+    <string name="detail_overview">Overview</string>
+    <string name="detail_no_description">Description not found for this asset.</string>
+    <string name="detail_show_more">Show More</string>
+    <string name="detail_show_less">Show Less</string>
+    <string name="detail_market_stats">Market stats</string>
+    <string name="detail_market_cap">Market Cap</string>
+    <string name="detail_volume">Volume (24h)</string>
+    <string name="detail_high">24h High</string>
+    <string name="detail_low">24h Low</string>
+    <string name="detail_price_performance">Price performance</string>
+    <string name="detail_price_performance_subtitle">USD · Selected period price movement</string>
+    <string name="detail_last_price">LAST PRICE</string>
+    <string name="detail_selected_period">SELECTED PERIOD</string>
+    <string name="detail_max_label">High  %1$s</string>
+    <string name="detail_min_label">Low  %1$s</string>
+    <string name="detail_error_empty">Coin detail returned empty.</string>
+    <string name="detail_back">Back</string>
+    <string name="detail_favorites_desc">Add to favorites</string>
+    <string name="detail_notifications_desc">Notification settings</string>
+    <string name="detail_rank_prefix">#%1$s  Crypto Asset</string>
+    <string name="detail_no_rank">No market cap rank</string>
+    
+    <!-- Custom Terms & Conditions -->
+    <string name="terms_prefix">"I have read and accept the "</string>
+    <string name="terms_link">"Terms of Use"</string>
+    <string name="terms_and">" and "</string>
+    <string name="privacy_link">"Privacy Policy"</string>
+    <string name="terms_suffix">""</string>
+    <string name="err_password_mismatch">Passwords do not match.</string>
+    <string name="err_terms_not_accepted">You must accept the terms.</string>
+    
+    <!-- Temporary Panel Tabs -->
+    <string name="tab_portfolio_title">My Crypto Portfolio</string>
+    <string name="tab_portfolio_desc">This page will show detailed graphical analysis and profit/loss ratios of the assets added to your wallet.</string>
+    <string name="tab_favorites_title">My Favorite Coins</string>
+    <string name="tab_favorites_desc">All cryptocurrency coins you mark as favorites with the star icon will be synchronized with our cloud database (Firebase Firestore) and streamed live here.</string>
+    <string name="tab_profile_title">Account &amp; Settings</string>
+    <string name="tab_profile_desc">Editing your profile information, Turkish/English language settings, and logout features will be located here.</string>
+    <string name="dev_date_week_4">Development Date: Week 4</string>
+    <string name="dev_date_week_5">Development Date: Week 5</string>
+    <string name="time_24h">24h</string>
+    <string name="time_7d">7d</string>
+    <string name="time_30d">30d</string>
+    <string name="time_90d">90d</string>
+    <string name="detail_market_rank">Market Rank</string>
+    <string name="detail_circulating_supply">Circulating Supply</string>
+    <string name="detail_max_supply">Max Supply</string>
+    <string name="detail_ath">All Time High (ATH)</string>
+    <string name="detail_ath_change">ATH Change %</string>
+    <string name="detail_change_7d">7d Change</string>
+    <string name="detail_change_30d">30d Change</string>
+    <string name="detail_change_24h">24h Change</string>
+
+    <!-- Portfolio & Assets -->
+    <string name="portfolio_assets_title">Portfolio Assets</string>
+    <string name="add_asset">Add Asset</string>
+    <string name="portfolio_empty_desc">Your portfolio is empty. Use the \'Add Asset\' button on the top right to record your cryptos and track their values live.</string>
+    <string name="select_crypto">Select Cryptocurrency</string>
+    <string name="select_placeholder">Select...</string>
+    <string name="amount_label">Amount</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_delete">Delete</string>
+    <string name="my_assets_title">My Assets</string>
+    <string name="add_asset_hint">Start by adding coins and amounts.</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">My Favorite Cryptos</string>
+    <string name="favorites_empty_desc">You haven\'t added any favorite crypto yet. Tap the star icon on the Markets tab to add your favorites.</string>
+    <string name="remove_favorite">Remove Favorite</string>
+    <string name="favorites_summary_avg">24h Average</string>
+    <string name="favorites_empty_short">No favorite coins yet</string>
+    <string name="favorites_empty_subtext">Tap the star icon on the Markets tab to build your watchlist.</string>
+
+    <!-- Profile -->
+    <string name="profile_expert_title">Crypto Tracking Specialist</string>
+    <string name="app_settings">Application Settings</string>
+    <string name="app_language_title">Application Language</string>
+    <string name="app_language_subtitle">Change application interface language</string>
+    <string name="btn_logout">Log Out</string>
+    <string name="default_user_name">User</string>
+
+    <!-- Home Overview & News -->
+    <string name="market_overview_title">Market Overview</string>
+    <string name="top_gainers">Top Gainers</string>
+    <string name="top_losers">Top Losers</string>
+    <string name="trending_categories">Trending Categories</string>
+
+    <string name="news_title">Market News</string>
+    <string name="all_news">All News  →</string>
+    <string name="news_sample_title">Investor inflow into Bitcoin ETFs continues to rise</string>
+    <string name="news_sample_source">Cointelegraph  •  2 hours ago</string>
+
+    <string name="error_prefix">Error: %1$s</string>
+</resources>

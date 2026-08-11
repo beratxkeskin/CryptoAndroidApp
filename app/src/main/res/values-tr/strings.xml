@@ -1,0 +1,175 @@
+<resources>
+    <string name="app_name">CryptoAndroidApp</string>
+    
+    <!-- Authentication - Login -->
+    <string name="login_title">Giriş Yap</string>
+    <string name="login_subtitle">Hesabınıza giriş yaparak devam edin.</string>
+    <string name="email_placeholder">E-posta</string>
+    <string name="password_placeholder">Şifre</string>
+    <string name="remember_me">Beni Hatırla</string>
+    <string name="forgot_password">Şifremi Unuttum?</string>
+    <string name="btn_login">Giriş Yap</string>
+    <string name="or_text">veya</string>
+    <string name="continue_with_google">Google ile devam et</string>
+    <string name="continue_with_apple">Apple ile devam et</string>
+    <string name="dont_have_account">Hesabın yok mu? </string>
+    <string name="btn_register">Kayıt Ol</string>
+    
+    <!-- Authentication - SignUp -->
+    <string name="register_title">Kayıt Ol</string>
+    <string name="register_subtitle">Yeni bir hesap oluşturarak başlayın.</string>
+    <string name="name_placeholder">Ad Soyad</string>
+    <string name="already_have_account">Hesabınız var mı? </string>
+    
+    <!-- Validation Errors & Messages -->
+    <string name="err_email_empty">E-posta boş bırakılamaz.</string>
+    <string name="err_email_invalid">Geçersiz e-posta.</string>
+    <string name="err_password_empty">Şifre boş bırakılamaz.</string>
+    <string name="err_password_short">Şifre en az 6 karakter olmalıdır.</string>
+    <string name="err_name_empty">Ad soyad boş bırakılamaz.</string>
+    <string name="success_login">Giriş Başarılı!</string>
+    <string name="success_register">Kayıt Başarılı!</string>
+    
+    <!-- Home Navigation & UI -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_markets">Piyasalar</string>
+    <string name="nav_portfolio">Portföy</string>
+    <string name="nav_favorites">Favoriler</string>
+    <string name="nav_profile">Profil</string>
+    
+    <string name="greeting_welcome">Hoş Geldiniz,</string>
+    <string name="greeting_evening">İyi Akşamlar,</string>
+    <string name="header_subtitle">Piyasaları anlık takip et.</string>
+    <string name="portfolio_title">Toplam Portföy Değeri</string>
+    <string name="portfolio_all_assets">Tüm Varlıklar</string>
+    
+    <!-- Time Frames -->
+    <string name="time_1d">1G</string>
+    <string name="time_1w">1H</string>
+    <string name="time_1m">1A</string>
+    <string name="time_3m">3A</string>
+    <string name="time_1y">1Y</string>
+    <string name="time_all">Tümü</string>
+    
+    <!-- Watchlist -->
+    <string name="watchlist_title">İzleme Listem</string>
+    <string name="view_all">Tümünü Gör  →</string>
+    
+    <!-- Markets -->
+    <string name="markets_title">Kripto Piyasaları</string>
+    <string name="markets_subtitle">Piyasaları keşfet, trendleri takip et.</string>
+    <string name="search_placeholder">Coin ara (Bitcoin, BTC...)</string>
+    <string name="search_clear">Aramayı temizle</string>
+    <string name="search_no_results">\"%1$s\" için sonuç bulunamadı.</string>
+    <string name="market_cap_stat">Toplam Piyasa Değeri</string>
+    <string name="volume_24h_stat">24s İşlem Hacmi</string>
+    <string name="btc_dominance_stat">Bitcoin Dominansı</string>
+    <string name="market_share">Piyasa Payı</string>
+    <string name="filter_all">Tümü</string>
+    <string name="filter_favorites">Takip Ettiklerim</string>
+    <string name="filter_trending">Trend Olanlar</string>
+    <string name="filter_gainers">Kazananlar</string>
+    <string name="filter_losers">Kaybedenler</string>
+    <string name="sort_market_cap">Sırala: Piyasa Değeri ⌄</string>
+    <string name="column_name">Varlık</string>
+    <string name="column_chart">Grafik</string>
+    <string name="column_price">Fiyat</string>
+    <string name="column_change">24s Değişim</string>
+    
+    <!-- Detail -->
+    <string name="detail_loading">Grafik verisi yükleniyor...</string>
+    <string name="detail_overview">Genel Bakış</string>
+    <string name="detail_no_description">Bu varlık için açıklama bulunamadı.</string>
+    <string name="detail_show_more">Daha Fazla Göster</string>
+    <string name="detail_show_less">Daha Az Göster</string>
+    <string name="detail_market_stats">Piyasa verileri</string>
+    <string name="detail_market_cap">Piyasa Değeri</string>
+    <string name="detail_volume">Hacim (24s)</string>
+    <string name="detail_high">24s En Yüksek</string>
+    <string name="detail_low">24s En Düşük</string>
+    <string name="detail_price_performance">Fiyat performansı</string>
+    <string name="detail_price_performance_subtitle">USD · Seçili dönem fiyat hareketi</string>
+    <string name="detail_last_price">SON FİYAT</string>
+    <string name="detail_selected_period">SEÇİLİ DÖNEM</string>
+    <string name="detail_max_label">En düşük  %1$s</string>
+    <string name="detail_min_label">En yüksek  %1$s</string>
+    <string name="detail_error_empty">Coin detayı boş döndü.</string>
+    <string name="detail_back">Geri</string>
+    <string name="detail_favorites_desc">Favorilere ekle</string>
+    <string name="detail_notifications_desc">Bildirim ayarları</string>
+    <string name="detail_rank_prefix">#%1$s  Kripto Para</string>
+    <string name="detail_no_rank">Piyasa değeri sırası yok</string>
+    
+    <!-- Custom Terms & Conditions -->
+    <string name="terms_prefix">"Kabul ediyorum: "</string>
+    <string name="terms_link">"Kullanım Koşulları"</string>
+    <string name="terms_and">" ve "</string>
+    <string name="privacy_link">"Gizlilik Politikasını"</string>
+    <string name="terms_suffix">"\nokudum, kabul ediyorum."</string>
+    <string name="err_password_mismatch">Şifreler uyuşmuyor.</string>
+    <string name="err_terms_not_accepted">Koşulları kabul etmelisiniz.</string>
+    
+    <!-- Temporary Panel Tabs -->
+    <string name="tab_portfolio_title">Kripto Portföyüm</string>
+    <string name="tab_portfolio_desc">Bu sayfada, cüzdanınıza eklediğiniz varlıkların detaylı grafiksel analizleri ve kâr/zarar oranları gösterilecektir.</string>
+    <string name="tab_favorites_title">Favori Coinlerim</string>
+    <string name="tab_favorites_desc">Yıldız simgesiyle favoriye aldığınız tüm kripto paralar bulut veritabanımız (Firebase Firestore) ile eşitlenerek burada canlı akacaktır.</string>
+    <string name="tab_profile_title">Hesap ve Ayarlar</string>
+    <string name="tab_profile_desc">Profil bilgilerinizi düzenleme, Türkçe/İngilizce dil ayarları ve çıkış yapma özellikleri burada yer alacaktır.</string>
+    <string name="dev_date_week_4">Geliştirme Tarihi: 4. Hafta</string>
+    <string name="dev_date_week_5">Geliştirme Tarihi: 5. Hafta</string>
+    <string name="time_24h">24s</string>
+    <string name="time_7d">7G</string>
+    <string name="time_30d">30G</string>
+    <string name="time_90d">90G</string>
+    <string name="detail_market_rank">Piyasa Sırası</string>
+    <string name="detail_circulating_supply">Dolaşımdaki Arz</string>
+    <string name="detail_max_supply">Maksimum Arz</string>
+    <string name="detail_ath">Tüm Zamanlar En Yüksek (ATH)</string>
+    <string name="detail_ath_change">ATH\'ye Uzaklık</string>
+    <string name="detail_change_7d">7 Günlük Değişim</string>
+    <string name="detail_change_30d">30 Günlük Değişim</string>
+    <string name="detail_change_24h">24 Saatlik Değişim</string>
+
+    <!-- Portfolio & Assets -->
+    <string name="portfolio_assets_title">Portföy Varlıkları</string>
+    <string name="add_asset">Varlık Ekle</string>
+    <string name="portfolio_empty_desc">Portföyünüz henüz boş. Sağ üstteki \'Varlık Ekle\' butonundan elinizdeki kripto paraları kaydedip değerlerini canlı takip edebilirsiniz.</string>
+    <string name="select_crypto">Kripto Para Seçin</string>
+    <string name="select_placeholder">Seçin...</string>
+    <string name="amount_label">Miktar</string>
+    <string name="btn_cancel">İptal</string>
+    <string name="btn_add">Ekle</string>
+    <string name="btn_delete">Sil</string>
+    <string name="my_assets_title">Varlıklarım</string>
+    <string name="add_asset_hint">Coin ve miktarını\nekleyerek başla.</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favori Kripto Paralarım</string>
+    <string name="favorites_empty_desc">Henüz favori kripto para eklemediniz. Piyasalar sekmesinden yıldız simgesine tıklayarak favorilerinizi ekleyebilirsiniz.</string>
+    <string name="remove_favorite">Favoriden Çıkar</string>
+    <string name="favorites_summary_avg">24s Ortalama</string>
+    <string name="favorites_empty_short">Henüz favori coin yok</string>
+    <string name="favorites_empty_subtext">Piyasalar ekranından yıldız simgesine dokunarak takip listeni oluşturabilirsin.</string>
+
+    <!-- Profile -->
+    <string name="profile_expert_title">Kripto Takip Uzmanı</string>
+    <string name="app_settings">Uygulama Ayarları</string>
+    <string name="app_language_title">Uygulama Dili / Language</string>
+    <string name="app_language_subtitle">Uygulama arayüz dilini değiştirin</string>
+    <string name="btn_logout">Oturumu Kapat</string>
+    <string name="default_user_name">Kullanıcı</string>
+
+    <!-- Home Overview & News -->
+    <string name="market_overview_title">Piyasaya Genel Bakış</string>
+    <string name="top_gainers">En Çok Yükselenler</string>
+    <string name="top_losers">En Çok Düşenler</string>
+    <string name="trending_categories">Trend Olanlar</string>
+
+    <string name="news_title">Piyasa Gündemi</string>
+    <string name="all_news">Tüm Haberler  →</string>
+    <string name="news_sample_title">Bitcoin ETF’lerine yatırımcı akışı artmaya devam ediyor</string>
+    <string name="news_sample_source">Cointelegraph  •  2 saat önce</string>
+
+    <string name="error_prefix">Hata: %1$s</string>
+</resources>
