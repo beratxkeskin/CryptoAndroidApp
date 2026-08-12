@@ -80,5 +80,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
+    // Unit Test Bağımlılıkları (Gün 24)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
 }
