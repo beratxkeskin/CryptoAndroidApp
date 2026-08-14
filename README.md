@@ -99,7 +99,8 @@
    * Add your Android app package (`com.example.cryptoandroidapp`) and download `google-services.json`.
    * Place `google-services.json` inside the `app/` folder.
 
-3. **Build & Run:**
+3. **Build & Automatic Dependency Sync (Gradle Auto-Sync):**
+   * Opening the project in Android Studio or running the command below will automatically download all required dependencies (Hilt, Retrofit, Compose, Vico Charts, Firebase) via Gradle and compile the app:
    ```bash
    ./gradlew compileDebugSources
    ```
@@ -200,7 +201,8 @@
    * Authentication (E-posta/Şifre) ve Firestore özelliklerini aktifleştirin.
    * `google-services.json` dosyasını indirip `app/` dizinine yerleştirin.
 
-3. **Derleyin ve Çalıştırın:**
+3. **Derleyin ve Otomatik Kütüphane İndirme (Gradle Auto-Sync):**
+   * Projeyi Android Studio'da açtığınızda veya aşağıdaki komutu çalıştırdığınızda tüm kütüphaneler (Hilt, Retrofit, Compose, Vico Charts, Firebase vb.) Gradle tarafından otomatik olarak internetten indirilir ve derlenir:
    ```bash
    ./gradlew compileDebugSources
    ```

@@ -48,10 +48,11 @@ class ProfileViewModel @Inject constructor(
     private fun loadProfile() {
         val user = authRepository.getCurrentUser() ?: return
         val createdAt = user.creationTimestamp
+        val currentLocale = Locale.getDefault()
         _uiState.value = _uiState.value.copy(
-            userName = user.displayName.ifBlank { "Kullanıcı" },
+            userName = user.displayName.ifBlank { if (currentLocale.language == "tr") "Kullanıcı" else "User" },
             userEmail = user.email,
-            memberSince = SimpleDateFormat("dd MMM yyyy", Locale("tr", "TR")).format(Date(createdAt)),
+            memberSince = SimpleDateFormat("dd MMM yyyy", currentLocale).format(Date(createdAt)),
             membershipAge = membershipAge(createdAt)
         )
         viewModelScope.launch {
@@ -78,20 +79,31 @@ class ProfileViewModel @Inject constructor(
 
     override fun updateDisplayName(displayName: String) {
         if (displayName.isBlank()) return
+        val isTurkish = Locale.getDefault().language == "tr"
         viewModelScope.launch {
             when (val result = authRepository.updateDisplayName(displayName.trim())) {
-                is Resource.Success -> _uiState.value = _uiState.value.copy(userName = displayName.trim(), message = "Profil adı güncellendi.")
-                is Resource.Error -> _uiState.value = _uiState.value.copy(message = result.message ?: "İsim güncellenemedi.")
+                is Resource.Success -> _uiState.value = _uiState.value.copy(
+                    userName = displayName.trim(),
+                    message = if (isTurkish) "Profil adı güncellendi." else "Profile name updated."
+                )
+                is Resource.Error -> _uiState.value = _uiState.value.copy(
+                    message = result.message ?: if (isTurkish) "İsim güncellenemedi." else "Name update failed."
+                )
                 else -> Unit
             }
         }
     }
 
     override fun sendPasswordResetEmail() {
+        val isTurkish = Locale.getDefault().language == "tr"
         viewModelScope.launch {
             _uiState.value = when (val result = authRepository.sendPasswordResetEmail()) {
-                is Resource.Success -> _uiState.value.copy(message = "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.")
-                is Resource.Error -> _uiState.value.copy(message = result.message ?: "E-posta gönderilemedi.")
+                is Resource.Success -> _uiState.value.copy(
+                    message = if (isTurkish) "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi." else "Password reset link sent to your email."
+                )
+                is Resource.Error -> _uiState.value.copy(
+                    message = result.message ?: if (isTurkish) "E-posta gönderilemedi." else "Email failed to send."
+                )
                 else -> _uiState.value
             }
         }
@@ -102,6 +114,11 @@ class ProfileViewModel @Inject constructor(
 
     private fun membershipAge(timestamp: Long): String {
         val days = ((System.currentTimeMillis() - timestamp) / 86_400_000L).coerceAtLeast(0)
-        return when { days >= 365 -> "${days / 365} yıl"; days >= 30 -> "${days / 30} ay"; else -> "$days gün" }
+        val isTurkish = Locale.getDefault().language == "tr"
+        return when {
+            days >= 365 -> if (isTurkish) "${days / 365} yıl" else "${days / 365} yr"
+            days >= 30 -> if (isTurkish) "${days / 30} ay" else "${days / 30} mo"
+            else -> if (isTurkish) "$days gün" else "$days d"
+        }
     }
 }

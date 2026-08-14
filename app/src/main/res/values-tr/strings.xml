@@ -50,6 +50,10 @@
     <string name="time_3m">3A</string>
     <string name="time_1y">1Y</string>
     <string name="time_all">Tümü</string>
+    <string name="time_24h">24s</string>
+    <string name="time_7d">7G</string>
+    <string name="time_30d">30G</string>
+    <string name="time_90d">90G</string>
     
     <!-- Watchlist -->
     <string name="watchlist_title">İzleme Listem</string>
@@ -111,17 +115,13 @@
     
     <!-- Temporary Panel Tabs -->
     <string name="tab_portfolio_title">Kripto Portföyüm</string>
-    <string name="tab_portfolio_desc">Bu sayfada, cüzdanınıza eklediğiniz varlıkların detaylı grafiksel analizleri ve kâr/zarar oranları gösterilecektir.</string>
+    <string name="tab_portfolio_desc">Toplam bakiye, varlık dağılımı ve canlı kâr/zarar performansınız.</string>
     <string name="tab_favorites_title">Favori Coinlerim</string>
-    <string name="tab_favorites_desc">Yıldız simgesiyle favoriye aldığınız tüm kripto paralar bulut veritabanımız (Firebase Firestore) ile eşitlenerek burada canlı akacaktır.</string>
+    <string name="tab_favorites_desc">Takip listenizdeki varlıkların canlı piyasa durumları ve anlık fiyat hareketleri.</string>
     <string name="tab_profile_title">Hesap ve Ayarlar</string>
-    <string name="tab_profile_desc">Profil bilgilerinizi düzenleme, Türkçe/İngilizce dil ayarları ve çıkış yapma özellikleri burada yer alacaktır.</string>
+    <string name="tab_profile_desc">Hesap tercihleri, güvenlik ayarları ve dil yapılandırması.</string>
     <string name="dev_date_week_4">Geliştirme Tarihi: 4. Hafta</string>
     <string name="dev_date_week_5">Geliştirme Tarihi: 5. Hafta</string>
-    <string name="time_24h">24s</string>
-    <string name="time_7d">7G</string>
-    <string name="time_30d">30G</string>
-    <string name="time_90d">90G</string>
     <string name="detail_market_rank">Piyasa Sırası</string>
     <string name="detail_circulating_supply">Dolaşımdaki Arz</string>
     <string name="detail_max_supply">Maksimum Arz</string>
@@ -141,8 +141,23 @@
     <string name="btn_cancel">İptal</string>
     <string name="btn_add">Ekle</string>
     <string name="btn_delete">Sil</string>
+    <string name="btn_save">Kaydet</string>
     <string name="my_assets_title">Varlıklarım</string>
     <string name="add_asset_hint">Coin ve miktarını\nekleyerek başla.</string>
+    <string name="unit_buy_cost">Birim alış maliyeti (USD)</string>
+    <string name="avg_cost_prefix">Ort. maliyet %1$s</string>
+    <string name="portfolio_performance_title">Portföy Performansı</string>
+    <string name="portfolio_performance_desc">Mevcut varlık miktarınızın geçmiş fiyatlarla değeri</string>
+    <string name="portfolio_total_cost">Toplam Maliyet</string>
+    <string name="portfolio_unrealized_pnl">Gerçekleşmemiş K/Z</string>
+    <string name="selected_period_value">Seçili Dönem Değeri</string>
+    <string name="portfolio_add_asset_chart">Grafik için varlık ekleyin.</string>
+
+    <!-- Allocation -->
+    <string name="allocation_title">Kripto Dağılımı</string>
+    <string name="allocation_desc">Varlıklarınızın güncel değer dağılımı</string>
+    <string name="allocation_empty">Dağılımı görmek için portföyünüze varlık ekleyin.</string>
+    <string name="total">Toplam</string>
 
     <!-- Favorites -->
     <string name="favorites_title">Favori Kripto Paralarım</string>
@@ -151,12 +166,32 @@
     <string name="favorites_summary_avg">24s Ortalama</string>
     <string name="favorites_empty_short">Henüz favori coin yok</string>
     <string name="favorites_empty_subtext">Piyasalar ekranından yıldız simgesine dokunarak takip listeni oluşturabilirsin.</string>
+    <string name="favorites_subtitle_status">Favoriye aldığın kripto paraların anlık durumu</string>
+    <string name="favorites_perf">Favorilerinin Performansı</string>
+    <string name="crypto_assets_count">kripto para</string>
+    <string name="day_movers">Günün Hareketi</string>
+    <string name="waiting_for_data">Veri bekleniyor</string>
+    <string name="lowest_mover">En düşük: %1$s</string>
 
     <!-- Profile -->
     <string name="profile_expert_title">Kripto Takip Uzmanı</string>
+    <string name="profile_info_sub">Profil bilgilerini görüntüle ve güncelle.</string>
+    <string name="security">Güvenlik</string>
+    <string name="notifications_sub">Fiyat uyarıları ve bildirim ayarları.</string>
+    <string name="transaction_history">İşlem Geçmişi</string>
+    <string name="transaction_history_sub">Geçmiş işlemlerini görüntüle.</string>
     <string name="app_settings">Uygulama Ayarları</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dark_active">Koyu tema aktif</string>
+    <string name="theme_light_active">Açık tema aktif</string>
     <string name="app_language_title">Uygulama Dili / Language</string>
     <string name="app_language_subtitle">Uygulama arayüz dilini değiştirin</string>
+    <string name="help_support">Yardım &amp; Destek</string>
+    <string name="help_support_sub">Sık sorulan sorular ve destek.</string>
+    <string name="about">Hakkında</string>
+    <string name="about_sub">Uygulama bilgileri ve lisanslar.</string>
+    <string name="member_since">Üyelik Başlangıcı</string>
+    <string name="following">Takip ediliyor</string>
     <string name="btn_logout">Oturumu Kapat</string>
     <string name="default_user_name">Kullanıcı</string>
 
@@ -164,7 +199,13 @@
     <string name="market_overview_title">Piyasaya Genel Bakış</string>
     <string name="top_gainers">En Çok Yükselenler</string>
     <string name="top_losers">En Çok Düşenler</string>
+    <string name="high_volume">Yüksek Hacimliler</string>
+    <string name="performers_7d">7G Şampiyonları</string>
     <string name="trending_categories">Trend Olanlar</string>
+
+    <!-- Offline Banner -->
+    <string name="offline_mode_title">Çevrimdışı Mod</string>
+    <string name="offline_mode_subtitle">• Canlı Akış Duraklatıldı</string>
 
     <string name="news_title">Piyasa Gündemi</string>
     <string name="all_news">Tüm Haberler  →</string>

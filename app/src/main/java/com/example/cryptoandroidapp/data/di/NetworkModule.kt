@@ -6,8 +6,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.ConnectionSpec
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -22,7 +24,7 @@ object NetworkModule {
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = HttpLoggingInterceptor.Level.HEADERS
         }
     }
 
@@ -30,19 +32,31 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient {  //OkHttpClient, uygulamanın internete bağlanırken kullandığı ana ağ aracıdır.
-        // Interface'i anonim nesne (object : Dns) olarak türetiyoruz
+    ): OkHttpClient {
         val ipv4Dns = object : okhttp3.Dns {
             override fun lookup(hostname: String): List<java.net.InetAddress> {
-                return okhttp3.Dns.SYSTEM.lookup(hostname).filterIsInstance<java.net.Inet4Address>()
+                return try {
+                    val addresses = okhttp3.Dns.SYSTEM.lookup(hostname)
+                    val ipv4 = addresses.filterIsInstance<java.net.Inet4Address>()
+                    if (ipv4.isNotEmpty()) ipv4 else addresses
+                } catch (e: Exception) {
+                    okhttp3.Dns.SYSTEM.lookup(hostname)
+                }
             }
         }
 
+        // Modern TLS 1.2 / TLS 1.3 destekli bağlantı spesifikasyonu
+        val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+            .tlsVersions(TlsVersion.TLS_1_3, TlsVersion.TLS_1_2)
+            .build()
+
         return OkHttpClient.Builder()
             .dns(ipv4Dns)
+            .connectionSpecs(listOf(spec, ConnectionSpec.CLEARTEXT))
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
@@ -51,8 +65,8 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         val contentType = "application/json".toMediaType()
         val json = Json {
-            ignoreUnknownKeys = true // API'den gelen ve bizim modelimizde olmayan ekstra alanları yok sayar (çökmeyi önler).
-            coerceInputValues = true // JSON'daki eksik veya null değerleri Kotlin'deki varsayılan değerlere güvenle eşitler.
+            ignoreUnknownKeys = true
+            coerceInputValues = true
         }
         return Retrofit.Builder()
             .baseUrl("https://api.coingecko.com/")

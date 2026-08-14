@@ -38,7 +38,7 @@ class BinanceWebSocketServiceImpl @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun connect(symbols: List<String>) {
-        if (webSocket != null) return
+        if (webSocket != null || symbols.isEmpty()) return
 
         val streamsPath = symbols.map { "${it.lowercase()}usdt@ticker" }.joinToString("/")
         val url = "wss://stream.binance.com/stream?streams=$streamsPath"
@@ -67,18 +67,24 @@ class BinanceWebSocketServiceImpl @Inject constructor(
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.e("BinanceWS", "WebSocket Bağlantı Hatası: ${t.localizedMessage}")
+                Log.w("BinanceWS", "WebSocket Ağ / TLS Uyarısı (CoinGecko REST yedekleme aktif): ${t.localizedMessage}")
 
                 this@BinanceWebSocketServiceImpl.webSocket = null
 
-                scope.launch {
-                    kotlinx.coroutines.delay(5000)
-                    connect(symbols)
+                // TLS / SSL el sıkışma hatası durumunda uygulamayı kilitlenmeye sokmamak için güvenli tekrar deneme
+                if (t !is javax.net.ssl.SSLException && t !is java.io.EOFException) {
+                    scope.launch {
+                        kotlinx.coroutines.delay(15000)
+                        if (this@BinanceWebSocketServiceImpl.webSocket == null) {
+                            connect(symbols)
+                        }
+                    }
                 }
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d("BinanceWS", "WebSocket Bağlantısı Kapatıldı.")
+                this@BinanceWebSocketServiceImpl.webSocket = null
             }
         })
     }

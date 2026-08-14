@@ -19,12 +19,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cryptoandroidapp.R
 import com.example.cryptoandroidapp.presentation.home.Muted
 import com.example.cryptoandroidapp.presentation.home.PanelBorder
-import com.example.cryptoandroidapp.presentation.home.components.Panel
 import java.util.Locale
 
 private val allocationColors = listOf(
@@ -32,26 +33,28 @@ private val allocationColors = listOf(
 )
 
 @Composable
-fun CryptoAllocationCard(assets: List<UserAssetItem>, totalText: String) = Panel {
-    Text("Kripto Dağılımı", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-    Text("Varlıklarınızın güncel değer dağılımı", color = Muted, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp))
-    Spacer(Modifier.height(16.dp))
-    if (assets.isEmpty()) {
-        Text("Dağılımı görmek için portföyünüze varlık ekleyin.", color = Muted, fontSize = 13.sp, modifier = Modifier.padding(vertical = 16.dp))
-    } else {
-        val portfolioValue = assets.sumOf { it.totalValueUsd }.takeIf { it > 0.0 } ?: 1.0
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.size(150.dp)) {
-                AllocationDonut(assets)
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(totalText, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    Text("Toplam", color = Muted, fontSize = 11.sp)
+fun CryptoAllocationCard(assets: List<UserAssetItem>, totalText: String) {
+    Column(Modifier.fillMaxWidth().padding(vertical = 14.dp)) {
+        Text(stringResource(R.string.allocation_title), color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.allocation_desc), color = Muted, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp))
+        Spacer(Modifier.height(16.dp))
+        if (assets.isEmpty()) {
+            Text(stringResource(R.string.allocation_empty), color = Muted, fontSize = 13.sp, modifier = Modifier.padding(vertical = 16.dp))
+        } else {
+            val portfolioValue = assets.sumOf { it.totalValueUsd }.takeIf { it > 0.0 } ?: 1.0
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.size(150.dp)) {
+                    AllocationDonut(assets)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(totalText, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.total), color = Muted, fontSize = 11.sp)
+                    }
                 }
-            }
-            Spacer(Modifier.width(18.dp))
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                assets.sortedByDescending { it.totalValueUsd }.take(5).forEachIndexed { index, asset ->
-                    AllocationLegend(asset, allocationColors[index % allocationColors.size], portfolioValue)
+                Spacer(Modifier.width(18.dp))
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    assets.sortedByDescending { it.totalValueUsd }.take(5).forEachIndexed { index, asset ->
+                        AllocationLegend(asset, allocationColors[index % allocationColors.size], portfolioValue)
+                    }
                 }
             }
         }

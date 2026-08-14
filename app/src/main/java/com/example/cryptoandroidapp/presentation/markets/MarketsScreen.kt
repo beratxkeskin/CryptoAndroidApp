@@ -28,24 +28,27 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.cryptoandroidapp.R
-import com.example.cryptoandroidapp.ui.theme.CryptoAndroidAppTheme
-import com.example.cryptoandroidapp.presentation.home.Background
+import com.example.cryptoandroidapp.common.toCompactUsd
+import com.example.cryptoandroidapp.common.toFormattedPrice
 import com.example.cryptoandroidapp.presentation.home.Green
 import com.example.cryptoandroidapp.presentation.home.Muted
 import com.example.cryptoandroidapp.presentation.home.PanelBorder
 import com.example.cryptoandroidapp.presentation.home.PanelColor
 import com.example.cryptoandroidapp.presentation.home.Purple
 import com.example.cryptoandroidapp.presentation.home.Red
+import com.example.cryptoandroidapp.presentation.home.components.HeaderIconButton
 import kotlinx.coroutines.delay
-import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -66,7 +69,7 @@ fun MarketsScreen(
         }
         is MarketsUiState.Error -> {
             Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Hata: ${state.message}", color = Color.White, fontSize = 15.sp)
+                Text(text = stringResource(R.string.error_prefix, state.message), color = Color.White, fontSize = 15.sp)
             }
         }
         is MarketsUiState.Success -> {
@@ -78,7 +81,7 @@ fun MarketsScreen(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 12.dp, bottom = 92.dp)
+                    .padding(top = 12.dp)
             ) {
                 // 1. ÜST BAŞLIK ALANI (Piyasalar + Arama ve Bildirim İkonları)
                 Row(
@@ -89,24 +92,14 @@ fun MarketsScreen(
                         Text(stringResource(R.string.markets_title), color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                         Text(stringResource(R.string.markets_subtitle), color = Muted, fontSize = 12.sp)
                     }
-                    // Arama ve Bildirim Butonları
-                    Box(
-                        Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(PanelColor)
-                            .border(1.dp, PanelBorder, CircleShape)
-                            .clickable {
-                                viewModel.toggleSearchVisibility()
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Default.Search, null, tint = Color.White, modifier = Modifier.size(18.dp))
-                    }
+                    HeaderIconButton(
+                        icon = Icons.Default.Search,
+                        onClick = { viewModel.toggleSearchVisibility() }
+                    )
                     Spacer(Modifier.width(8.dp))
-                    Box(Modifier.size(36.dp).clip(CircleShape).background(PanelColor).border(1.dp, PanelBorder, CircleShape).clickable {}, contentAlignment = Alignment.Center) {
-                        Icon(Icons.Default.NotificationsNone, null, tint = Color.White, modifier = Modifier.size(18.dp))
-                    }
+                    HeaderIconButton(
+                        icon = Icons.Default.NotificationsNone
+                    )
                 }
 
                 if (state.isSearchVisible) {
@@ -159,13 +152,11 @@ fun MarketsScreen(
                     // Kart 1: Toplam Piyasa Değeri
                     StatCard(
                         title = stringResource(R.string.market_cap_stat),
-                        value = formatLargeNumber(state.globalMarketData.totalMarketCapUsd),
+                        value = state.globalMarketData.totalMarketCapUsd.toCompactUsd(),
                         changeText = mcapChangeText,
                         isPositive = isMcapPositive,
                         modifier = Modifier.weight(1f)
-                    ) {
-                        MiniSparkLine(color = Green, points = listOf(0.2f, 0.35f, 0.28f, 0.45f, 0.4f, 0.58f, 0.5f, 0.65f))
-                    }
+                    )
 
                     // Kart 2: 24s İşlem Hacmi
                     Card(
@@ -188,7 +179,7 @@ fun MarketsScreen(
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = formatLargeNumber(state.globalMarketData.totalVolumeUsd),
+                                text = state.globalMarketData.totalVolumeUsd.toCompactUsd(),
                                 color = Color.White,
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold
@@ -256,26 +247,23 @@ fun MarketsScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                // 4. TABLO BAŞLIĞI
+                // 4. TEMİZ & FERAH TABLO BAŞLIĞI (3 Bölge Tasarımı)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                        .padding(horizontal = 6.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("#", color = Muted, fontSize = 10.sp, modifier = Modifier.width(28.dp))
-                    Text(stringResource(R.string.column_name), color = Muted, fontSize = 10.sp, modifier = Modifier.weight(1.3f))
-                    Text(stringResource(R.string.column_chart), color = Muted, fontSize = 10.sp, modifier = Modifier.weight(0.9f))
-                    Text(stringResource(R.string.column_price), color = Muted, fontSize = 10.sp, modifier = Modifier.weight(1.1f))
-                    Text(stringResource(R.string.column_change), color = Muted, fontSize = 10.sp, modifier = Modifier.weight(1f))
-                    Spacer(Modifier.width(28.dp))
+                    Text(stringResource(R.string.column_name), color = Muted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1.35f))
+                    Text(stringResource(R.string.column_chart), color = Muted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(0.95f), textAlign = TextAlign.Center)
+                    Text(stringResource(R.string.column_price), color = Muted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1.35f), textAlign = TextAlign.End)
                 }
 
-                // 5. KRİPTO LİSTESİ (LazyColumn)
+                // 5. KRİPTO LİSTESİ (Ferah & Yüksek Standartlı LazyColumn)
                 LazyColumn(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    contentPadding = PaddingValues(bottom = 12.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    contentPadding = PaddingValues(bottom = 140.dp)
                 ) {
                     itemsIndexed(state.filteredCoins, key = { _, coin -> coin.symbol }) { index, coin ->
                         val isFavorited = state.favoriteCoinIds.contains(coin.id)
@@ -294,7 +282,7 @@ fun MarketsScreen(
                                 color = Muted,
                                 fontSize = 13.sp,
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                textAlign = TextAlign.Center
                             )
                         }
                     }
@@ -311,7 +299,7 @@ private fun StatCard(
     changeText: String,
     isPositive: Boolean,
     modifier: Modifier = Modifier,
-    chartContent: @Composable () -> Unit
+    chartContent: (@Composable () -> Unit)? = null
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PanelColor),
@@ -341,7 +329,7 @@ private fun StatCard(
                     Text(value, color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                     Text(changeText, color = if (isPositive) Green else Red, fontSize = 10.sp)
                 }
-                chartContent()
+                chartContent?.invoke()
             }
         }
     }
@@ -355,10 +343,10 @@ private fun MarketRow(
     onToggleFavorite: () -> Unit,
     onCoinClick: (String) -> Unit
 ) {
-    val priceText = String.format(java.util.Locale.US, "$%,.2f", coin.currentPrice)
+    val priceText = coin.currentPrice.toFormattedPrice()
     val changeText = String.format(
         java.util.Locale.US,
-        if (coin.priceChangePercentage24h >= 0) "▲ %,.2f%%" else "▼ %,.2f%%",
+        if (coin.priceChangePercentage24h >= 0) "▲ %.2f%%" else "▼ %.2f%%",
         Math.abs(coin.priceChangePercentage24h)
     )
     val isPositive = coin.priceChangePercentage24h >= 0
@@ -384,98 +372,147 @@ private fun MarketRow(
         prevPrice = coin.currentPrice
     }
 
+    val sparklinePoints = remember(coin.priceHistory7d, isPositive) {
+        if (coin.priceHistory7d.size >= 2) {
+            val min = coin.priceHistory7d.minOrNull() ?: 0.0
+            val max = coin.priceHistory7d.maxOrNull() ?: 1.0
+            val range = (max - min).takeIf { it > 0 } ?: 1.0
+            coin.priceHistory7d.map { ((it - min) / range).toFloat() }
+        } else {
+            if (isPositive) listOf(0.2f, 0.38f, 0.32f, 0.55f, 0.48f, 0.7f, 0.65f, 0.88f)
+            else listOf(0.88f, 0.68f, 0.72f, 0.48f, 0.55f, 0.32f, 0.38f, 0.18f)
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(animatedColor)
             .clickable { onCoinClick(coin.id) }
             .padding(horizontal = 8.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = index.toString(),
-            color = Muted,
-            fontSize = 11.sp,
-            modifier = Modifier.width(28.dp)
-        )
-
+        // BÖLGE 1: Logo + İsim + Sembol & Sıralama (Sol Taraf)
         Row(
-            modifier = Modifier.weight(1.3f),
+            modifier = Modifier.weight(1.35f),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 model = coin.imageUrl,
                 contentDescription = coin.name,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(30.dp)
                     .clip(CircleShape)
                     .background(PanelBorder.copy(alpha = 0.3f))
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(10.dp))
             Column {
                 Text(
                     text = coin.name,
                     color = Color.White,
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(coin.symbol.uppercase(), color = Muted, fontSize = 9.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "#$index",
+                        color = Purple,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = coin.symbol.uppercase(),
+                        color = Muted,
+                        fontSize = 10.sp
+                    )
+                }
             }
         }
 
+        // BÖLGE 2: Geniş ve Ferah Mini Sparkline Grafik (Orta Bölge)
         Box(
             modifier = Modifier
-                .weight(0.9f)
-                .height(24.dp)
-                .padding(horizontal = 4.dp)
+                .weight(0.95f)
+                .height(28.dp)
+                .padding(horizontal = 6.dp)
         ) {
             MiniSparkLine(
                 color = if (isPositive) Green else Red,
-                points = if (isPositive) listOf(0.3f, 0.4f, 0.35f, 0.5f, 0.45f, 0.6f) else listOf(0.6f, 0.5f, 0.55f, 0.4f, 0.45f, 0.3f)
+                points = sparklinePoints
             )
         }
 
-        Text(
-            text = priceText,
-            color = Color.White,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1.1f),
-            maxLines = 1
-        )
+        // BÖLGE 3: Fiyat + 24s Değişim Rozeti & Favori Yıldızı (Sağ Bölge)
+        Row(
+            modifier = Modifier.weight(1.35f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = priceText,
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+                Spacer(Modifier.height(2.dp))
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = if (isPositive) Green.copy(alpha = 0.15f) else Red.copy(alpha = 0.15f)
+                ) {
+                    Text(
+                        text = changeText,
+                        color = if (isPositive) Green else Red,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        maxLines = 1
+                    )
+                }
+            }
 
-        Text(
-            text = changeText,
-            color = if (isPositive) Green else Red,
-            fontSize = 11.sp,
-            modifier = Modifier.weight(1f),
-            maxLines = 1
-        )
+            Spacer(Modifier.width(8.dp))
 
-        Icon(
-            imageVector = if (isFavorited) Icons.Default.Star else Icons.Default.StarBorder,
-            contentDescription = null,
-            tint = if (isFavorited) Purple else Muted,
-            modifier = Modifier
-                .size(20.dp)
-                .clickable { onToggleFavorite() }
-        )
+            IconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = if (isFavorited) Icons.Default.Star else Icons.Default.StarBorder,
+                    contentDescription = null,
+                    tint = if (isFavorited) Purple else Muted,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun MiniSparkLine(color: Color, points: List<Float>) {
     Canvas(Modifier.fillMaxSize()) {
+        if (points.size < 2) return@Canvas
         val path = Path()
         points.forEachIndexed { index, point ->
             val x = size.width * index / (points.size - 1)
             val y = size.height * (1f - point)
             if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
         }
-        //drawPath(path, color, style = Stroke(1.5f.dp.toPx(), cap = StrokeCap.Round))
+        drawPath(
+            path = path,
+            color = color.copy(alpha = 0.25f),
+            style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
+        )
+        drawPath(
+            path = path,
+            color = color,
+            style = Stroke(width = 1.5.dp.toPx(), cap = StrokeCap.Round)
+        )
     }
 }
 
@@ -495,63 +532,6 @@ private fun MiniBarChart(color: Color) {
                 color = color,
                 topLeft = Offset(x, y),
                 size = androidx.compose.ui.geometry.Size(barWidth, size.height * h)
-            )
-        }
-    }
-}
-
-private fun formatLargeNumber(number: Double): String {
-    return when {
-        number >= 1.0e12 -> String.format(java.util.Locale.US, "$%,.2fT", number / 1.0e12)
-        number >= 1.0e9 -> String.format(java.util.Locale.US, "$%,.2fB", number / 1.0e9)
-        number >= 1.0e6 -> String.format(java.util.Locale.US, "$%,.2fM", number / 1.0e6)
-        else -> String.format(java.util.Locale.US, "$%,.2f", number)
-    }
-}
-
-private class MockMarketsViewModel(
-    val state: MarketsUiState
-) : IMarketsViewModel {
-    override val uiState: StateFlow<MarketsUiState> = MutableStateFlow(state)
-    override fun toggleFavorite(coinId: String) {}
-    override fun updateSearchQuery(query: String) {}
-    override fun updateFilter(filter: MarketFilter) {}
-    override fun toggleSearchVisibility() {}
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun MarketsScreenPreview() {
-    val sampleCoins = listOf(
-        com.example.cryptoandroidapp.domain.model.CryptoModel("bitcoin", "btc", "Bitcoin", "", 67823.54, 1.34e12, 1, 2.35),
-        com.example.cryptoandroidapp.domain.model.CryptoModel("ethereum", "eth", "Ethereum", "", 3523.18, 4.23e11, 2, 3.02),
-        com.example.cryptoandroidapp.domain.model.CryptoModel("solana", "sol", "Solana", "", 174.35, 8.12e10, 3, 6.21),
-        com.example.cryptoandroidapp.domain.model.CryptoModel("binancecoin", "bnb", "BNB", "", 595.42, 8.76e10, 4, -0.42),
-        com.example.cryptoandroidapp.domain.model.CryptoModel("ripple", "xrp", "XRP", "", 0.61, 3.36e10, 5, -1.15)
-    )
-    val mockState = MarketsUiState.Success(
-        coins = sampleCoins,
-        filteredCoins = sampleCoins,
-        globalMarketData = com.example.cryptoandroidapp.domain.model.GlobalMarketData(
-            totalMarketCapUsd = 2410000000000.0,
-            totalVolumeUsd = 98470000000.0,
-            btcDominance = 52.48,
-            marketCapChangePercentage24hUsd = 2.65
-        ),
-        favoriteCoinIds = listOf("bitcoin", "ethereum"),
-        searchQuery = "",
-        selectedFilter = MarketFilter.ALL,
-        isSearchVisible = false
-    )
-    CryptoAndroidAppTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Background)
-        ) {
-            MarketsScreen(
-                onCoinClick = {},
-                viewModel = MockMarketsViewModel(mockState)
             )
         }
     }

@@ -5,17 +5,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import com.example.cryptoandroidapp.R
 import coil.compose.AsyncImage
+import com.example.cryptoandroidapp.common.toFormattedPrice
 import com.example.cryptoandroidapp.domain.model.CryptoModel
 import com.example.cryptoandroidapp.presentation.home.Green
 import com.example.cryptoandroidapp.presentation.home.Muted
@@ -49,10 +49,7 @@ import com.example.cryptoandroidapp.presentation.home.PanelBorder
 import com.example.cryptoandroidapp.presentation.home.PanelColor
 import com.example.cryptoandroidapp.presentation.home.Purple
 import com.example.cryptoandroidapp.presentation.home.Red
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.util.Locale
-import kotlin.math.abs
+import com.example.cryptoandroidapp.presentation.home.components.HeaderIconButton
 
 @Composable
 fun FavoritesScreen(
@@ -68,7 +65,7 @@ fun FavoritesScreen(
             CircularProgressIndicator(color = Purple)
         }
         is FavoritesUiState.Error -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Hata: ${state.message}", color = Color.White, fontSize = 15.sp)
+            Text(text = stringResource(R.string.error_prefix, state.message), color = Color.White, fontSize = 15.sp)
         }
         is FavoritesUiState.Success -> FavoritesContent(
             userName = userName,
@@ -93,14 +90,14 @@ private fun FavoritesContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
-            .padding(top = 12.dp, bottom = 92.dp)
+            .padding(top = 12.dp, bottom = 140.dp)
     ) {
-        FavoritesHeader(userName)
+        FavoritesHeader(userName = userName, hasFavorites = coins.isNotEmpty())
         Spacer(Modifier.height(20.dp))
         FavoriteMarketSummary(coins)
         Spacer(Modifier.height(18.dp))
-        Text("Takip Ettiklerin", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        Text("Favoriye aldığın kripto paraların anlık durumu", color = Muted, fontSize = 12.sp)
+        Text(stringResource(R.string.filter_favorites), color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.favorites_subtitle_status), color = Muted, fontSize = 12.sp)
         Spacer(Modifier.height(10.dp))
 
         if (coins.isEmpty()) {
@@ -120,15 +117,17 @@ private fun FavoritesContent(
 }
 
 @Composable
-private fun FavoritesHeader(userName: String) {
+private fun FavoritesHeader(userName: String, hasFavorites: Boolean) {
     Row(modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f)) {
             Text(stringResource(R.string.favorites_title), color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
-            Text(stringResource(R.string.favorites_empty_desc), color = Muted, fontSize = 13.sp)
+            Text(
+                text = if (hasFavorites) stringResource(R.string.tab_favorites_desc) else stringResource(R.string.favorites_empty_desc),
+                color = Muted,
+                fontSize = 13.sp
+            )
         }
-        Box(modifier = Modifier.size(38.dp).clip(CircleShape).background(PanelColor).border(1.dp, PanelBorder, CircleShape), contentAlignment = Alignment.Center) {
-            Icon(Icons.Default.NotificationsNone, contentDescription = stringResource(R.string.detail_notifications_desc), tint = Color.White, modifier = Modifier.size(19.dp))
-        }
+        HeaderIconButton(icon = Icons.Default.NotificationsNone, contentDescription = stringResource(R.string.detail_notifications_desc), size = 38.dp)
         Spacer(Modifier.width(10.dp))
         Box(modifier = Modifier.size(38.dp).border(1.dp, Purple, CircleShape).background(Color(0xFF1C2840), CircleShape), contentAlignment = Alignment.Center) {
             Text(userName.firstOrNull()?.uppercase() ?: "K", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
@@ -145,25 +144,41 @@ private fun FavoriteMarketSummary(coins: List<CryptoModel>) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         SummaryCard(stringResource(R.string.favorites_summary_avg), Modifier.weight(1.12f)) {
             val isPositive = averageChange >= 0
-            Text(String.format(Locale.US, "%s%.2f%%", if (isPositive) "+" else "", averageChange), color = if (isPositive) Green else Red, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text("Favorilerinin performansı", color = Muted, fontSize = 10.sp, maxLines = 1)
+            Text(String.format(java.util.Locale.US, "%s%.2f%%", if (isPositive) "+" else "", averageChange), color = if (isPositive) Green else Red, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.favorites_perf), color = Muted, fontSize = 10.sp, maxLines = 1)
         }
-        SummaryCard("Takipte", Modifier.weight(.82f)) {
+        SummaryCard(stringResource(R.string.watchlist_title), Modifier.weight(.82f)) {
             Text(coins.size.toString(), color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text("kripto para", color = Muted, fontSize = 10.sp)
+            Text(stringResource(R.string.crypto_assets_count), color = Muted, fontSize = 10.sp)
         }
-        SummaryCard("Günün Hareketi", Modifier.weight(1.15f)) {
+        SummaryCard(stringResource(R.string.day_movers), Modifier.weight(1.15f)) {
             if (bestCoin == null || worstCoin == null) {
                 Text("-", color = Muted, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text("Veri bekleniyor", color = Muted, fontSize = 10.sp)
+                Text(stringResource(R.string.waiting_for_data), color = Muted, fontSize = 10.sp)
             } else {
+                val isBestPositive = bestCoin.priceChangePercentage24h >= 0
+                val bestChangeText = String.format(
+                    java.util.Locale.US,
+                    if (isBestPositive) "+%.2f%%" else "-%.2f%%",
+                    kotlin.math.abs(bestCoin.priceChangePercentage24h)
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.TrendingUp, null, tint = Green, modifier = Modifier.size(15.dp))
+                    Icon(
+                        imageVector = if (isBestPositive) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                        contentDescription = null,
+                        tint = if (isBestPositive) Green else Red,
+                        modifier = Modifier.size(15.dp)
+                    )
                     Spacer(Modifier.width(3.dp))
                     Text(bestCoin.symbol.uppercase(), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }
-                Text(String.format(Locale.US, "+%.2f%%", bestCoin.priceChangePercentage24h), color = Green, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                if (worstCoin != bestCoin) Text("En düşük: ${worstCoin.symbol.uppercase()}", color = Muted, fontSize = 9.sp, maxLines = 1)
+                Text(
+                    text = bestChangeText,
+                    color = if (isBestPositive) Green else Red,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                if (worstCoin != bestCoin) Text(stringResource(R.string.lowest_mover, worstCoin.symbol.uppercase()), color = Muted, fontSize = 9.sp, maxLines = 1)
             }
         }
     }
@@ -215,12 +230,12 @@ private fun FavoriteCoinRow(
             }
 
             Column(modifier = Modifier.weight(.9f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(String.format(Locale.US, "$%,.2f", coin.currentPrice), color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+                Text(coin.currentPrice.toFormattedPrice(), color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
             }
 
             Row(modifier = Modifier.width(70.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                 Icon(if (isPositive) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward, null, tint = if (isPositive) Green else Red, modifier = Modifier.size(11.dp))
-                Text(String.format(Locale.US, "%.2f%%", abs(coin.priceChangePercentage24h)), color = if (isPositive) Green else Red, fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
+                Text(String.format(java.util.Locale.US, "%.2f%%", kotlin.math.abs(coin.priceChangePercentage24h)), color = if (isPositive) Green else Red, fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Box(modifier = Modifier.width(58.dp).height(24.dp).padding(horizontal = 5.dp)) {
@@ -267,20 +282,4 @@ private fun EmptyFavoritesState() {
             Text(stringResource(R.string.favorites_empty_subtext), color = Muted, fontSize = 12.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 5.dp))
         }
     }
-}
-
-private class MockFavoritesViewModel(val state: FavoritesUiState) : IFavoritesViewModel {
-    override val uiState: StateFlow<FavoritesUiState> = MutableStateFlow(state)
-    override fun toggleFavorite(coinId: String) = Unit
-}
-
-@androidx.compose.ui.tooling.preview.Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun FavoritesScreenPreview() {
-    val sampleCoins = listOf(
-        CryptoModel("bitcoin", "btc", "Bitcoin", "", 67823.54, 1.34e12, 1, 2.35),
-        CryptoModel("ethereum", "eth", "Ethereum", "", 3523.18, 4.23e11, 2, 3.02),
-        CryptoModel("solana", "sol", "Solana", "", 174.35, 8.12e10, 3, 6.21)
-    )
-    FavoritesScreen("Berat", {}, viewModel = MockFavoritesViewModel(FavoritesUiState.Success(sampleCoins, sampleCoins.map { it.id })))
 }

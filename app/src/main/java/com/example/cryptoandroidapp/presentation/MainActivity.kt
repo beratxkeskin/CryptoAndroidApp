@@ -1,15 +1,19 @@
 package com.example.cryptoandroidapp.presentation
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,23 +22,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.cryptoandroidapp.domain.repository.IAuthRepository
 import com.example.cryptoandroidapp.presentation.auth.LoginScreen
 import com.example.cryptoandroidapp.presentation.auth.SignUpScreen
+import com.example.cryptoandroidapp.presentation.crypto_detail.CryptoDetailScreen
 import com.example.cryptoandroidapp.presentation.home.HomeScreen
 import com.example.cryptoandroidapp.presentation.home.HomeViewModel
-import com.example.cryptoandroidapp.presentation.crypto_detail.CryptoDetailScreen
 import com.example.cryptoandroidapp.ui.theme.CryptoAndroidAppTheme
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-import android.content.pm.PackageManager
-import android.os.Build
-import android.util.Log
-import com.google.firebase.messaging.FirebaseMessaging
-
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     @Inject lateinit var authRepository: IAuthRepository
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,20 +49,14 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     
-                    // Bildirime tıklandığında gelen intent extra'sını kontrol ediyoruz
                     val notificationCoinId = intent?.getStringExtra("coinId")
-                    androidx.compose.runtime.LaunchedEffect(notificationCoinId) {
+                    LaunchedEffect(notificationCoinId) {
                         notificationCoinId?.let { coinId ->
                             navController.navigate("detail/$coinId")
                         }
                     }
 
                     val startDestination = if (authRepository.isUserLoggedIn()) "home" else "login"
-                    // Sekme seçimi oturumluk bir arayüz durumudur. Bunu SavedState'a
-                    // yazmak, uygulama yeniden açıldığında kullanıcıyı eski bir alt
-                    // ekrana (ör. Portföy) geri döndürüp ana akışın kaybolmuş gibi
-                    // görünmesine neden oluyordu. Yeni uygulama oturumu her zaman
-                    // gerçek ana ekrandan başlar.
                     var selectedHomeTab by remember { mutableStateOf("home") }
 
                     NavHost(
@@ -109,7 +104,7 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = "detail/{coinId}",
                             deepLinks = listOf(
-                                androidx.navigation.navDeepLink { uriPattern = "cryptoapp://detail/{coinId}" }
+                                navDeepLink { uriPattern = "cryptoapp://detail/{coinId}" }
                             ),
                             arguments = listOf(navArgument("coinId") { type = NavType.StringType })
                         ) { backStackEntry ->

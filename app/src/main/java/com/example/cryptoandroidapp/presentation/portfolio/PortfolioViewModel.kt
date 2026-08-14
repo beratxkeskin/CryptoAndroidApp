@@ -20,8 +20,26 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
+data class UserAssetItem(
+    val coinId: String,
+    val name: String,
+    val symbol: String,
+    val amount: Double,
+    val totalValueUsd: Double,
+    val currentPriceUsd: Double,
+    val averageCostUsd: Double,
+    val pnlUsd: Double,
+    val pnlPercent: Double,
+    val imageUrl: String
+)
+
+data class PortfolioChartPoint(
+    val timestamp: Long,
+    val valueUsd: Double
+)
+
 sealed interface PortfolioUiState {
-    data object Loading : PortfolioUiState
+    object Loading : PortfolioUiState
     data class Success(
         val portfolioTotalText: String,
         val portfolioChangeText: String,
@@ -40,42 +58,37 @@ sealed interface PortfolioUiState {
     data class Error(val message: String) : PortfolioUiState
 }
 
-data class PortfolioChartPoint(val timestamp: Long, val valueUsd: Double)
-
-data class UserAssetItem(
-    val coinId: String,
-    val name: String,
-    val symbol: String,
-    val amount: Double,
-    val totalValueUsd: Double,
-    val currentPriceUsd: Double,
-    val averageCostUsd: Double,
-    val pnlUsd: Double,
-    val pnlPercent: Double,
-    val imageUrl: String
-)
-
 @HiltViewModel
 class PortfolioViewModel @Inject constructor(
-    private val portfolioRepository: IPortfolioRepository,
     private val cryptoRepository: ICryptoRepository,
+    private val portfolioRepository: IPortfolioRepository,
     private val authRepository: IAuthRepository,
     private val calculatePortfolioUseCase: CalculatePortfolioUseCase
 ) : ViewModel(), IPortfolioViewModel {
 
     private val _uiState = MutableStateFlow<PortfolioUiState>(PortfolioUiState.Loading)
     override val uiState: StateFlow<PortfolioUiState> = _uiState.asStateFlow()
-    private var chartJob: Job? = null
-    private var latestCoins: List<CryptoModel> = emptyList()
+
     private var latestPortfolio: List<UserPortfolioAsset> = emptyList()
+    private var latestCoins: List<CryptoModel> = emptyList()
+    private var chartJob: Job? = null
 
-    init { loadPortfolio() }
+    init {
+        observePortfolioData()
+    }
 
-    private fun loadPortfolio() {
-        val userId = authRepository.getCurrentUser()?.uid ?: return
+    private fun observePortfolioData() {
+        val userId = authRepository.getCurrentUser()?.uid ?: run {
+            _uiState.value = PortfolioUiState.Error("Oturum bulunamadı")
+            return
+        }
+
         viewModelScope.launch {
-            combine(cryptoRepository.getCryptoList(), portfolioRepository.getUserPortfolio(userId)) { coins, portfolio ->
-                coins to portfolio
+            combine(
+                cryptoRepository.getCryptoList(),
+                portfolioRepository.getUserPortfolio(userId)
+            ) { coinsRes, portfolioRes ->
+                coinsRes to portfolioRes
             }.collect { (coinsRes, portfolioRes) ->
                 if (coinsRes is Resource.Loading || portfolioRes is Resource.Loading) {
                     if (_uiState.value !is PortfolioUiState.Success) _uiState.value = PortfolioUiState.Loading
@@ -167,9 +180,12 @@ class PortfolioViewModel @Inject constructor(
         days: Int
     ): List<PortfolioChartPoint> {
         if (primaryCandles.isEmpty()) return emptyList()
-        val assetCount = portfolio.sumOf { it.amount }.coerceAtLeast(1.0)
+        val currentPortfolioTotalUsd = calculatePortfolioUseCase(portfolio, coins).totalValueUsd
+        val latestCandleClose = primaryCandles.lastOrNull()?.close?.takeIf { it > 0.0 } ?: 1.0
+
         return primaryCandles.map { candle ->
-            PortfolioChartPoint(timestamp = candle.timestamp, valueUsd = candle.close * assetCount)
+            val ratio = candle.close / latestCandleClose
+            PortfolioChartPoint(timestamp = candle.timestamp, valueUsd = currentPortfolioTotalUsd * ratio)
         }
     }
 
@@ -182,17 +198,22 @@ class PortfolioViewModel @Inject constructor(
             amount = amount,
             addedPriceUsd = costPerUnitUsd
         )
-        viewModelScope.launch { portfolioRepository.addAssetToPortfolio(userId, asset) }
+        viewModelScope.launch {
+            portfolioRepository.addAssetToPortfolio(userId, asset)
+        }
     }
 
     override fun deleteAsset(coinId: String) {
         val userId = authRepository.getCurrentUser()?.uid ?: return
-        viewModelScope.launch { portfolioRepository.removeAssetFromPortfolio(userId, coinId) }
+        viewModelScope.launch {
+            portfolioRepository.removeAssetFromPortfolio(userId, coinId)
+        }
     }
 
     private fun formatChange(changeUsd: Double, changePercent: Double): String {
-        val sign = if (changeUsd >= 0.0) "+" else "-"
-        val arrow = if (changeUsd >= 0.0) "▲" else "▼"
-        return String.format(Locale.US, "%s$%,.2f (%s %.2f%%) 24s", sign, Math.abs(changeUsd), arrow, Math.abs(changePercent))
+        val positive = changeUsd >= 0.0
+        val sign = if (positive) "+" else "-"
+        val arrow = if (positive) "▲" else "▼"
+        return String.format(Locale.US, "%s$%,.2f (%s %.2f%%) 24s", sign, kotlin.math.abs(changeUsd), arrow, kotlin.math.abs(changePercent))
     }
 }

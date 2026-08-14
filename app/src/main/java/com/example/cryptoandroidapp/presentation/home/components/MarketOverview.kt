@@ -50,13 +50,16 @@ fun MarketOverview(
     coins: List<CryptoModel> = emptyList(),
     onCoinClick: (String) -> Unit = {}
 ) = Panel {
-    val stablecoins = setOf("USDT", "USDC", "BUSD", "DAI", "FDUSD", "TUSD", "USDE", "PYUSD", "USDS", "USDD", "UST")
-    val cryptoOnlyCoins = coins.filterNot { coin -> stablecoins.contains(coin.symbol.uppercase(Locale.ROOT)) }
+    // USD, EUR, TRY veya DAI içeren tüm stablecoin ve itibari paraya sabitli varlıklar filtrelenir (USD1, USDE, USDT, USDC vb.)
+    val cryptoOnlyCoins = coins.filterNot { coin ->
+        val sym = coin.symbol.uppercase(Locale.ROOT)
+        sym.contains("USD") || sym.contains("DAI") || sym.contains("EUR") || sym.contains("TRY")
+    }
 
-    // 1. En Çok Yükselenler (24 saat)
+    // 1. En Çok Yükselenler (24 saat) - 5 Kripto Coin
     val gainers = cryptoOnlyCoins
         .sortedByDescending { it.priceChangePercentage24h }
-        .take(3)
+        .take(5)
         .map { coin ->
             OverviewItem(
                 coinId = coin.id,
@@ -68,10 +71,10 @@ fun MarketOverview(
             )
         }
 
-    // 2. En Çok Düşenler (24 saat)
+    // 2. En Çok Düşenler (24 saat) - 5 Kripto Coin
     val losers = cryptoOnlyCoins
         .sortedBy { it.priceChangePercentage24h }
-        .take(3)
+        .take(5)
         .map { coin ->
             OverviewItem(
                 coinId = coin.id,
@@ -83,10 +86,10 @@ fun MarketOverview(
             )
         }
 
-    // 3. Yüksek Hacimliler
+    // 3. Yüksek Hacimliler - 5 Kripto Coin (USD1, USDE gibi stablecoinler haric)
     val highVolume = cryptoOnlyCoins
         .sortedByDescending { it.totalVolume }
-        .take(3)
+        .take(5)
         .map { coin ->
             OverviewItem(
                 coinId = coin.id,
@@ -98,7 +101,7 @@ fun MarketOverview(
             )
         }
 
-    // 4. 7 Günlük Şampiyonlar
+    // 4. 7 Günlük Şampiyonlar - 5 Kripto Coin
     val perform7d = cryptoOnlyCoins
         .mapNotNull { coin ->
             val first = coin.priceHistory7d.firstOrNull()
@@ -109,7 +112,7 @@ fun MarketOverview(
             } else null
         }
         .sortedByDescending { it.second }
-        .take(3)
+        .take(5)
         .map { (coin, pct) ->
             OverviewItem(
                 coinId = coin.id,
@@ -162,7 +165,7 @@ fun MarketOverview(
     ) {
         OverviewCard(
             icon = "⚡",
-            title = "High Volume",
+            title = stringResource(R.string.high_volume),
             color = Purple,
             items = highVolume,
             onCoinClick = onCoinClick,
@@ -170,7 +173,7 @@ fun MarketOverview(
         )
         OverviewCard(
             icon = "🔥",
-            title = "7D Performers",
+            title = stringResource(R.string.performers_7d),
             color = Color(0xFFFF9800),
             items = perform7d,
             onCoinClick = onCoinClick,
@@ -190,11 +193,11 @@ fun OverviewCard(
 ) = Card(
     colors = CardDefaults.cardColors(containerColor = Color(0xFF0C1A30)),
     modifier = modifier
-        .height(160.dp)
+        .height(235.dp)
         .border(1.dp, PanelBorder.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
     shape = RoundedCornerShape(14.dp)
 ) {
-    Column(Modifier.padding(12.dp)) {
+    Column(Modifier.padding(10.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "$icon $title",
@@ -206,7 +209,7 @@ fun OverviewCard(
             )
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(6.dp))
 
         items.forEach { item ->
             Row(
@@ -214,7 +217,7 @@ fun OverviewCard(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(6.dp))
                     .clickable { onCoinClick(item.coinId) }
-                    .padding(vertical = 4.dp, horizontal = 2.dp),
+                    .padding(vertical = 3.dp, horizontal = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(

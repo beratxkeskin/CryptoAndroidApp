@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -60,7 +60,7 @@ fun BottomNavigation(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         NavItem(Icons.Default.Home, stringResource(R.string.nav_home), selectedTab == "home") { onTabSelected("home") }
-        NavItem(Icons.Default.TrendingUp, stringResource(R.string.nav_markets), selectedTab == "markets") { onTabSelected("markets") }
+        NavItem(Icons.AutoMirrored.Filled.TrendingUp, stringResource(R.string.nav_markets), selectedTab == "markets") { onTabSelected("markets") }
         NavItem(Icons.Default.PieChart, stringResource(R.string.nav_portfolio), selectedTab == "portfolio") { onTabSelected("portfolio") }
         NavItem(Icons.Default.Star, stringResource(R.string.nav_favorites), selectedTab == "favorites") { onTabSelected("favorites") }
         NavItem(Icons.Default.Person, stringResource(R.string.nav_profile), selectedTab == "profile") { onTabSelected("profile") }
