@@ -31,6 +31,7 @@ class BinanceWebSocketServiceImpl @Inject constructor(
 ) : IBinanceWebSocketService {
 
     private val json = Json { ignoreUnknownKeys = true }
+    //DTO'da olmayan JSON alanlarını görmezden gel
     private val _tickerFlow = MutableSharedFlow<BinanceTickerDto>(replay = 1)
     override val tickerFlow: SharedFlow<BinanceTickerDto> = _tickerFlow.asSharedFlow()
 

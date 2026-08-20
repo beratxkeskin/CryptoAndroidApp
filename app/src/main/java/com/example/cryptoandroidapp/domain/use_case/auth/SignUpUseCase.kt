@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SignUpUseCase @Inject constructor(
     private val authRepository: IAuthRepository
 ) {
-    // operator fun invoke, bu sınıfın bir fonksiyon gibi çağrılabilmesini sağlar (örn: signUpUseCase(email, pass))
+    // operator fun invoke, bu sınıfın bir fonksiyon gibi çağrılabilmesini sağlar
     operator fun invoke(email: String, password: String, displayName: String): Flow<Resource<UserEntity>> {
         return authRepository.signUp(email, password, displayName)
     }

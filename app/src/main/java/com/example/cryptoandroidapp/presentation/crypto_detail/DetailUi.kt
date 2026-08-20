@@ -1,6 +1,7 @@
 package com.example.cryptoandroidapp.presentation.crypto_detail
 
 import androidx.compose.ui.graphics.Color
+import com.example.cryptoandroidapp.common.toFormattedPrice
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.abs
@@ -13,9 +14,7 @@ internal val DetailPurple = Color(0xFF914CFF)
 internal val DetailGreen = Color(0xFF00D87D)
 internal val DetailRed = Color(0xFFFF5C7A)
 
-internal fun formatUsd(value: Double): String = NumberFormat.getCurrencyInstance(Locale.US).apply {
-    maximumFractionDigits = if (abs(value) < 1) 4 else 2
-}.format(value)
+internal fun formatUsd(value: Double): String = value.toFormattedPrice()
 
 internal fun formatUsdChange(price: Double, percentage: Double): String =
     formatUsd(price * percentage / (100 + percentage))
@@ -35,15 +34,4 @@ internal fun compactNumber(value: Double): String = when {
     else -> String.format(Locale.US, "%.2f", value)
 }
 
-internal fun formatChartPrice(value: Double): String {
-    val fractionDigits = when {
-        value == 0.0 -> 2
-        abs(value) < 0.01 -> 6
-        abs(value) < 1 -> 4
-        else -> 2
-    }
-    return NumberFormat.getCurrencyInstance(Locale.US).apply {
-        minimumFractionDigits = fractionDigits
-        maximumFractionDigits = fractionDigits
-    }.format(value)
-}
+internal fun formatChartPrice(value: Double): String = value.toFormattedPrice()

@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CoinMarketChartResponseDto(
-    @SerialName("prices") val prices: List<List<Double>> = emptyList()
+    @SerialName("prices")
+    val prices: List<List<Double>> = emptyList()
 )

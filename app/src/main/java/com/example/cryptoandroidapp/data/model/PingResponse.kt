@@ -8,3 +8,5 @@ data class PingResponse(
     @SerialName("gecko_says")
     val geckoSays: String
 )
+
+// servisin erişilebilir olup olmadığını denemek için kullanıyoruz

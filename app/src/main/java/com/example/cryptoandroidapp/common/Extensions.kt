@@ -5,7 +5,7 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 
 /**
- * Kripto para miktarını kullanıcı dostu olarak biçimlendirir.
+ * Kripto para miktarını biçimlendirir.
  * Tam sayılar için (Örn: 10.0 -> "10 ETH") küsürat gösterilmez.
  * Ondalıklı sayılar için (Örn: 0.25 -> "0.25 ETH", 0.0042 -> "0.0042 BTC") basamaklar gösterilir.
  */
